@@ -1,0 +1,31 @@
+extend type User @key(fields: "id") {
+    id: ID! @external
+    histories(
+        first: Int = 10
+        after: String
+    ):HistoryConnection!
+}
+
+type HistoryEdge {
+    node: History!
+    cursor: String
+}
+
+type HistoryConnection {
+    edges: [HistoryEdge!]!
+    nodes: [History!]!
+}
+
+union History =
+    HistoryEntityA |
+    HistoryEntityB
+
+type HistoryEntityA {
+    id: String
+    textA: String
+}
+
+type HistoryEntityB {
+    id: String
+    textB: String
+}
