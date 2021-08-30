@@ -16,7 +16,12 @@ type HistoryConnection {
     nodes: [History!]!
 }
 
-union History =
+type History {
+    id: ID!
+    detail: HistoryDetail
+}
+
+union HistoryDetail =
     HistoryEntityA |
     HistoryEntityB
 

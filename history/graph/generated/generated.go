@@ -49,6 +49,11 @@ type ComplexityRoot struct {
 		FindUserByID func(childComplexity int, id string) int
 	}
 
+	History struct {
+		Detail func(childComplexity int) int
+		ID     func(childComplexity int) int
+	}
+
 	HistoryConnection struct {
 		Edges func(childComplexity int) int
 		Nodes func(childComplexity int) int
@@ -117,6 +122,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Entity.FindUserByID(childComplexity, args["id"].(string)), true
+
+	case "History.detail":
+		if e.complexity.History.Detail == nil {
+			break
+		}
+
+		return e.complexity.History.Detail(childComplexity), true
+
+	case "History.id":
+		if e.complexity.History.ID == nil {
+			break
+		}
+
+		return e.complexity.History.ID(childComplexity), true
 
 	case "HistoryConnection.edges":
 		if e.complexity.HistoryConnection.Edges == nil {
@@ -287,7 +306,12 @@ type HistoryConnection {
     nodes: [History!]!
 }
 
-union History =
+type History {
+    id: ID!
+    detail: HistoryDetail
+}
+
+union HistoryDetail =
     HistoryEntityA |
     HistoryEntityB
 
@@ -486,6 +510,73 @@ func (ec *executionContext) _Entity_findUserByID(ctx context.Context, field grap
 	return ec.marshalNUser2ᚖgistᚗgithubᚗcomᚋvvakameᚋ7a08b7f517b012cca09f82ec9ab4d1fdᚋhistoryᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _History_id(ctx context.Context, field graphql.CollectedField, obj *model.History) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "History",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _History_detail(ctx context.Context, field graphql.CollectedField, obj *model.History) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "History",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Detail, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(model.HistoryDetail)
+	fc.Result = res
+	return ec.marshalOHistoryDetail2gistᚗgithubᚗcomᚋvvakameᚋ7a08b7f517b012cca09f82ec9ab4d1fdᚋhistoryᚋgraphᚋmodelᚐHistoryDetail(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _HistoryConnection_edges(ctx context.Context, field graphql.CollectedField, obj *model.HistoryConnection) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -551,9 +642,9 @@ func (ec *executionContext) _HistoryConnection_nodes(ctx context.Context, field 
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]model.History)
+	res := resTmp.([]*model.History)
 	fc.Result = res
-	return ec.marshalNHistory2ᚕgistᚗgithubᚗcomᚋvvakameᚋ7a08b7f517b012cca09f82ec9ab4d1fdᚋhistoryᚋgraphᚋmodelᚐHistoryᚄ(ctx, field.Selections, res)
+	return ec.marshalNHistory2ᚕᚖgistᚗgithubᚗcomᚋvvakameᚋ7a08b7f517b012cca09f82ec9ab4d1fdᚋhistoryᚋgraphᚋmodelᚐHistoryᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _HistoryEdge_node(ctx context.Context, field graphql.CollectedField, obj *model.HistoryEdge) (ret graphql.Marshaler) {
@@ -586,9 +677,9 @@ func (ec *executionContext) _HistoryEdge_node(ctx context.Context, field graphql
 		}
 		return graphql.Null
 	}
-	res := resTmp.(model.History)
+	res := resTmp.(*model.History)
 	fc.Result = res
-	return ec.marshalNHistory2gistᚗgithubᚗcomᚋvvakameᚋ7a08b7f517b012cca09f82ec9ab4d1fdᚋhistoryᚋgraphᚋmodelᚐHistory(ctx, field.Selections, res)
+	return ec.marshalNHistory2ᚖgistᚗgithubᚗcomᚋvvakameᚋ7a08b7f517b012cca09f82ec9ab4d1fdᚋhistoryᚋgraphᚋmodelᚐHistory(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _HistoryEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *model.HistoryEdge) (ret graphql.Marshaler) {
@@ -2134,7 +2225,7 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 
 // region    ************************** interface.gotpl ***************************
 
-func (ec *executionContext) _History(ctx context.Context, sel ast.SelectionSet, obj model.History) graphql.Marshaler {
+func (ec *executionContext) _HistoryDetail(ctx context.Context, sel ast.SelectionSet, obj model.HistoryDetail) graphql.Marshaler {
 	switch obj := (obj).(type) {
 	case nil:
 		return graphql.Null
@@ -2217,6 +2308,35 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 	return out
 }
 
+var historyImplementors = []string{"History"}
+
+func (ec *executionContext) _History(ctx context.Context, sel ast.SelectionSet, obj *model.History) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, historyImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("History")
+		case "id":
+			out.Values[i] = ec._History_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "detail":
+			out.Values[i] = ec._History_detail(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var historyConnectionImplementors = []string{"HistoryConnection"}
 
 func (ec *executionContext) _HistoryConnection(ctx context.Context, sel ast.SelectionSet, obj *model.HistoryConnection) graphql.Marshaler {
@@ -2278,7 +2398,7 @@ func (ec *executionContext) _HistoryEdge(ctx context.Context, sel ast.SelectionS
 	return out
 }
 
-var historyEntityAImplementors = []string{"HistoryEntityA", "History"}
+var historyEntityAImplementors = []string{"HistoryEntityA", "HistoryDetail"}
 
 func (ec *executionContext) _HistoryEntityA(ctx context.Context, sel ast.SelectionSet, obj *model.HistoryEntityA) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, historyEntityAImplementors)
@@ -2304,7 +2424,7 @@ func (ec *executionContext) _HistoryEntityA(ctx context.Context, sel ast.Selecti
 	return out
 }
 
-var historyEntityBImplementors = []string{"HistoryEntityB", "History"}
+var historyEntityBImplementors = []string{"HistoryEntityB", "HistoryDetail"}
 
 func (ec *executionContext) _HistoryEntityB(ctx context.Context, sel ast.SelectionSet, obj *model.HistoryEntityB) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, historyEntityBImplementors)
@@ -2718,17 +2838,7 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
-func (ec *executionContext) marshalNHistory2gistᚗgithubᚗcomᚋvvakameᚋ7a08b7f517b012cca09f82ec9ab4d1fdᚋhistoryᚋgraphᚋmodelᚐHistory(ctx context.Context, sel ast.SelectionSet, v model.History) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	return ec._History(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalNHistory2ᚕgistᚗgithubᚗcomᚋvvakameᚋ7a08b7f517b012cca09f82ec9ab4d1fdᚋhistoryᚋgraphᚋmodelᚐHistoryᚄ(ctx context.Context, sel ast.SelectionSet, v []model.History) graphql.Marshaler {
+func (ec *executionContext) marshalNHistory2ᚕᚖgistᚗgithubᚗcomᚋvvakameᚋ7a08b7f517b012cca09f82ec9ab4d1fdᚋhistoryᚋgraphᚋmodelᚐHistoryᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.History) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -2752,7 +2862,7 @@ func (ec *executionContext) marshalNHistory2ᚕgistᚗgithubᚗcomᚋvvakameᚋ7
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNHistory2gistᚗgithubᚗcomᚋvvakameᚋ7a08b7f517b012cca09f82ec9ab4d1fdᚋhistoryᚋgraphᚋmodelᚐHistory(ctx, sel, v[i])
+			ret[i] = ec.marshalNHistory2ᚖgistᚗgithubᚗcomᚋvvakameᚋ7a08b7f517b012cca09f82ec9ab4d1fdᚋhistoryᚋgraphᚋmodelᚐHistory(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -2770,6 +2880,16 @@ func (ec *executionContext) marshalNHistory2ᚕgistᚗgithubᚗcomᚋvvakameᚋ7
 	}
 
 	return ret
+}
+
+func (ec *executionContext) marshalNHistory2ᚖgistᚗgithubᚗcomᚋvvakameᚋ7a08b7f517b012cca09f82ec9ab4d1fdᚋhistoryᚋgraphᚋmodelᚐHistory(ctx context.Context, sel ast.SelectionSet, v *model.History) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._History(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNHistoryConnection2gistᚗgithubᚗcomᚋvvakameᚋ7a08b7f517b012cca09f82ec9ab4d1fdᚋhistoryᚋgraphᚋmodelᚐHistoryConnection(ctx context.Context, sel ast.SelectionSet, v model.HistoryConnection) graphql.Marshaler {
@@ -3277,6 +3397,13 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 		return graphql.Null
 	}
 	return graphql.MarshalBoolean(*v)
+}
+
+func (ec *executionContext) marshalOHistoryDetail2gistᚗgithubᚗcomᚋvvakameᚋ7a08b7f517b012cca09f82ec9ab4d1fdᚋhistoryᚋgraphᚋmodelᚐHistoryDetail(ctx context.Context, sel ast.SelectionSet, v model.HistoryDetail) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._HistoryDetail(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v interface{}) (*int, error) {

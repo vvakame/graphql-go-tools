@@ -2,18 +2,23 @@
 
 package model
 
-type History interface {
-	IsHistory()
+type HistoryDetail interface {
+	IsHistoryDetail()
+}
+
+type History struct {
+	ID     string        `json:"id"`
+	Detail HistoryDetail `json:"detail"`
 }
 
 type HistoryConnection struct {
 	Edges []*HistoryEdge `json:"edges"`
-	Nodes []History      `json:"nodes"`
+	Nodes []*History     `json:"nodes"`
 }
 
 type HistoryEdge struct {
-	Node   History `json:"node"`
-	Cursor *string `json:"cursor"`
+	Node   *History `json:"node"`
+	Cursor *string  `json:"cursor"`
 }
 
 type HistoryEntityA struct {
@@ -21,11 +26,11 @@ type HistoryEntityA struct {
 	TextA *string `json:"textA"`
 }
 
-func (HistoryEntityA) IsHistory() {}
+func (HistoryEntityA) IsHistoryDetail() {}
 
 type HistoryEntityB struct {
 	ID    *string `json:"id"`
 	TextB *string `json:"textB"`
 }
 
-func (HistoryEntityB) IsHistory() {}
+func (HistoryEntityB) IsHistoryDetail() {}

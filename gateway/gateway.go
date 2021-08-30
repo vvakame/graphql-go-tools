@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"net/http"
 	"sync"
 
@@ -90,7 +91,7 @@ func (g *Gateway) UpdateDataSources(newDataSourcesConfig []graphqlDataSource.Con
 	closer := make(chan struct{})
 	defer close(closer)
 
-	engine, err := graphql.NewExecutionEngineV2(g.logger, datasourceConfig, closer)
+	engine, err := graphql.NewExecutionEngineV2(context.Background(), g.logger, datasourceConfig)
 	if err != nil {
 		g.logger.Error("create engine: %v", log.Error(err))
 		return
